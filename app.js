@@ -51,10 +51,6 @@ if (env === 'development') {
 if (env === 'production') {
   // TODO
 }
-app.get('/', function(req, res){
-	res.send('abhinav')
-});
-
 // Handling requests
 app.post('/login', function(req, res){
 
@@ -98,25 +94,12 @@ var getAccessToken = function() {
 }
 // get the username and password
 var auth_credentials = function(){
-  	//var constring = "pg://myuser:123456@localhost/mydb";
-	//var client = new pg.Client(constring);
-	// client.connect();
-	// var q1 = client.query("select * from authenticate");
-	// q1.on("row", function(row, result){
-	// 	result.addRow(row);
-	// });
 	var deferred = q.defer();
-	// q1.on("end", function(result){
-	// 	client.end();
-	// 	deferred.resolve(result)
-	// });
-	//return deferred.promise;
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     	client.query('SELECT * FROM authenticate', function(err, result) {
       		done();
       		if (err)
-       		{
-       		 	//console.error(err); res.send("Error " + err); 
+      		{	
        		 	deferred.reject(err);
        		}
       		else
@@ -132,44 +115,55 @@ var addProject = function(title,desc,part){
 	var deferred = q.defer();
 	var getId = getProjectId();
 	getId.then(function(data){
-		console.log('data ',data.rows[0].id);
-		var constring = "pg://myuser:123456@localhost/mydb";
-		var client = new pg.Client(constring);
-		client.connect();
-		client.query("insert into projects values("+(data.rows[0].id+1)+",'"+title+"','"+desc+"','"+part+"');");
-		deferred.resolve('success');
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query("insert into projects values("+(data.rows[0].id+1)+",'"+title+"','"+desc+"','"+part+"');", function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve('success');
+       		}
+    	});
+  		});
 	});
 	return deferred.promise;
 }
 // get the last project id
 var getProjectId = function(){
-	var constring = "pg://myuser:123456@localhost/mydb";
-	var client = new pg.Client(constring);
-	client.connect();
-	var q1 = client.query("select id from projects order by id desc limit 1");
-	q1.on("row", function(row, result){
-		result.addRow(row);
-	});
 	var deferred = q.defer();
-	q1.on("end", function(result){
-		client.end();
-		deferred.resolve(result)
-	});
-	return deferred.promise;
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('select id from projects order by id desc limit 1', function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
 }
 // get all the projects
 var getProjects = function(){
-	var constring = "pg://myuser:123456@localhost/mydb";
-	var client = new pg.Client(constring);
-	client.connect();
-	var q1 = client.query("select * from projects");
-	q1.on("row", function(row, result){
-		result.addRow(row);
-	});
 	var deferred = q.defer();
-	q1.on("end", function(result){
-		client.end();
-		deferred.resolve(result)
-	});
-	return deferred.promise;
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('SELECT * FROM projects', function(err, result) {
+      		done();
+      		if (err)
+      		{	
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
 }
