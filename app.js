@@ -74,10 +74,10 @@ app.post('/projects/add', function(req, res){
 	}
 	else res.send('failed');
 });
-app.post('/projects/get',function(req, res){
+app.get('/projects/get',function(req, res){
 	var getallprojects = getProjects();
 	getallprojects.then(function(data){
-		res.send('data:',data.rows);
+		res.send(data.rows);
 	});	
 });
 /**
