@@ -51,7 +51,9 @@ if (env === 'development') {
 if (env === 'production') {
   // TODO
 }
-
+app.get('/', function(req, res){
+	res.send('abhinav')
+});
 
 // Handling requests
 app.post('/login', function(req, res){
@@ -86,9 +88,9 @@ app.post('/projects/get',function(req, res){
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
-});
+// http.createServer(app).listen(app.get('port'), function () {
+//   console.log('Express server listening on port ' + app.get('port'));
+// });
 
 // functions
 // generate accesstoken
@@ -97,20 +99,35 @@ var getAccessToken = function() {
 }
 // get the username and password
 var auth_credentials = function(){
-  	var constring = "pg://myuser:123456@localhost/mydb";
-	var client = new pg.Client(constring);
-	client.connect();
-	var q1 = client.query("select * from authenticate");
-	q1.on("row", function(row, result){
-		result.addRow(row);
-	});
+  	//var constring = "pg://myuser:123456@localhost/mydb";
+	//var client = new pg.Client(constring);
+	// client.connect();
+	// var q1 = client.query("select * from authenticate");
+	// q1.on("row", function(row, result){
+	// 	result.addRow(row);
+	// });
 	var deferred = q.defer();
-	q1.on("end", function(result){
-		client.end();
-		deferred.resolve(result)
-	});
-	return deferred.promise;
-}
+	// q1.on("end", function(result){
+	// 	client.end();
+	// 	deferred.resolve(result)
+	// });
+	//return deferred.promise;
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('SELECT * FROM authenticate', function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	//console.error(err); res.send("Error " + err); 
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
+}	
 // add a new project
 var addProject = function(title,desc,part){
 	var deferred = q.defer();
