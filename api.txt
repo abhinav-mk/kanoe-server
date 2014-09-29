@@ -1,0 +1,20 @@
+to authenticate:
+https://kanoe-api-server.herokuapp.com/login
+payload:
+username: 'username'
+password: 'password'
+
+to add a new project:
+https://kanoe-api-server.herokuapp.com/projects/add
+payload:
+accessToken: 'accesstoken'
+title: 'title'
+description: 'description'
+participants: 'participants'
+
+to get projects:
+https://kanoe-api-server.herokuapp.com/projects/get
+
+samples:
+username: kanoe123456
+password: edb211287e4997ddbe5d3e38161bf518

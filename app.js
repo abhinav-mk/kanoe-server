@@ -80,6 +80,16 @@ app.get('/projects/get',function(req, res){
 		res.send(data.rows);
 	});	
 });
+app.post('/projects/remove', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var delproject = delProjectById(req.body.id);
+		delproject.then(function(data){
+			res.send('success');
+		});
+	}
+	else res.send('failed');
+});
 /**
  * Start Server
  */
@@ -166,4 +176,21 @@ var getProjects = function(){
     	});
   	});
   	return deferred.promise;
+}
+var delProjectById = function(id){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done){
+		client.query('delete from projects where id='+id+';', function(err, result){
+			done();
+			if(err)
+			{
+				deferred.reject(err);
+			}
+			else
+			{
+				deferred.resolve(result);
+			}
+		});
+	})
+	return deferred.promise;
 }
