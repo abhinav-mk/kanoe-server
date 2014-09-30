@@ -90,6 +90,31 @@ app.post('/projects/remove', function(req, res){
 	}
 	else res.send('failed');
 });
+app.post('/events/add', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var addevent = addEvent(req.body.title,req.body.date,req.body.place,req.body.description,req.body.remarks);
+		addevent.then(function(data){
+			res.send('success');
+		});
+	}
+});
+app.post('/events/get', function(req, res){
+	var getallevents = getEvents();
+	getallevents.then(function(data){
+		res.send(data.rows);
+	});
+});
+app.post('/events/remove', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var delevent = delEventById(req.body.id);
+		delevent.then(function(data){
+			res.send('success')
+		})
+	}
+	else res.send('failed');
+});
 /**
  * Start Server
  */
@@ -177,6 +202,7 @@ var getProjects = function(){
   	});
   	return deferred.promise;
 }
+// delete a project by id
 var delProjectById = function(id){
 	var deferred = q.defer();
 	pg.connect(process.env.DATABASE_URL, function(err, client, done){
@@ -194,3 +220,80 @@ var delProjectById = function(id){
 	})
 	return deferred.promise;
 }
+// get the last event id
+var getEventId = function(){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('select id from events order by id desc limit 1', function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
+}
+// add a new event
+var addEvent = function(title,date,place,description,remarks){
+	var deferred = q.defer();
+	var getId = getEventId();
+	getId.then(function(data){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query("insert into events values("+(data.rows[0].id+1)+",'"+title+"','"+date+"','"+place+"','"+description+"','"+remarks+"');", function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve('success');
+       		}
+    	});
+  		});
+	});
+	return deferred.promise;
+}
+// get all the events
+var getEvents = function(){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('SELECT * FROM events', function(err, result) {
+      		done();
+      		if (err)
+      		{	
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
+}
+// delete an event by id
+var delEventById = function(id){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done){
+		client.query('delete from events where id='+id+';', function(err, result){
+			done();
+			if(err)
+			{
+				deferred.reject(err);
+			}
+			else
+			{
+				deferred.resolve(result);
+			}
+		});
+	})
+	return deferred.promise;
+}
+
+

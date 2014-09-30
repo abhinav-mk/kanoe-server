@@ -1,9 +1,11 @@
+------------authenticate-------------------------------
 to authenticate:
 https://kanoe-api-server.herokuapp.com/login
 payload:
 username: 'username'
 password: 'password'
-
+-------------------------------------------------------
+----------- projects ----------------------------------
 to add a new project:
 https://kanoe-api-server.herokuapp.com/projects/add
 payload:
@@ -15,6 +17,32 @@ participants: 'participants'
 to get projects:
 https://kanoe-api-server.herokuapp.com/projects/get
 
+to delete a project:
+https://kanoe.api-server.herokuapp.com/projects/remove
+payload:
+accessToken: 'accesstoken'
+id: 'id'
+-------------------------------------------------------
+-----------events--------------------------------------
+to add a new event:
+https://kanoe-api-server.herokuapp.com/events/add
+payload:
+accessToken: 'accesstoken'
+title: 'title'
+date: 'date'
+place: 'place'
+description: 'description'
+remarks: 'remarks'
+
+to get events:
+https://kanoe-api-server.herokuapp.com/events/get
+
+to delete an event:
+https://kanoe.api-server.herokuapp.com/events/remove
+payload:
+accessToken: 'accesstoken'
+id: 'id'
+-------------------------------------------------------
 samples:
 username: kanoe123456
 password: edb211287e4997ddbe5d3e38161bf518
