@@ -99,7 +99,7 @@ app.post('/events/add', function(req, res){
 		});
 	}
 });
-app.post('/events/get', function(req, res){
+app.get('/events/get', function(req, res){
 	var getallevents = getEvents();
 	getallevents.then(function(data){
 		res.send(data.rows);
