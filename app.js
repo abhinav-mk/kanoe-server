@@ -98,6 +98,7 @@ app.post('/events/add', function(req, res){
 			res.send('success');
 		});
 	}
+	else res.send('failed')
 });
 app.get('/events/get', function(req, res){
 	var getallevents = getEvents();
