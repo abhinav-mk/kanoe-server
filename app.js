@@ -132,7 +132,7 @@ app.post('/publications/add', function(req, res){
 	}
 	else res.send('failed');
 });
-app.post('/publications/remove' function(req, res){
+app.post('/publications/remove', function(req, res){
 	if(global.accessToken == req.body.accessToken)
 	{
 		var delpublications = delPublicationById(req.body.id);
