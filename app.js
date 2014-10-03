@@ -335,7 +335,6 @@ var getPublicationId = function(){
       		else
        		{
        		 	deferred.resolve(result);
-       		{
        		}
     	});
   	});
