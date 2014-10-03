@@ -116,6 +116,32 @@ app.post('/events/remove', function(req, res){
 	}
 	else res.send('failed');
 });
+app.post('/publications/get', function(req, res){
+	var getallpublications = getPublications();
+	getallpublications.then(function(data){
+		res.send(data.rows);
+	});
+});
+app.post('/publications/add', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var addpublication = addPublication(req.body.author,req.body.coauthors,req.body.area, req.body.date, req.body.description);
+		addpublication.then(function(data){
+			res.send('success')
+		});
+	}
+	else res.send('failed');
+});
+app.post('/publications/remove' function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var delpublications = delPublicationById(req.body.id);
+		delpublications.then(function(data){
+			res.send(success)
+		});
+	}
+	else res.send('failed');
+});
 /**
  * Start Server
  */
@@ -296,5 +322,80 @@ var delEventById = function(id){
 	})
 	return deferred.promise;
 }
-
+// get the last publication id
+var getPublicationId = function(){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('select id from publications order by id desc limit 1', function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		{
+       		}
+    	});
+  	});
+  	return deferred.promise;
+}
+// add a new publication
+var addPublication = function(author,coauthors,area,date,description){
+	var deferred = q.defer();
+	var getId = getPublicationId();
+	getId.then(function(data){
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query("insert into publications values("+(data.rows[0].id+1)+",'"+author+"','"+coauthors+"','"+area+"','"+date+"','"+description+"');", function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve('success');
+       		}
+    	});
+  		});
+	});
+	return deferred.promise;
+}
+// get all the publications
+var getPublications = function(){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query('SELECT * FROM publications', function(err, result) {
+      		done();
+      		if (err)
+      		{	
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve(result);
+       		}
+    	});
+  	});
+  	return deferred.promise;
+}
+// delete an publications by id
+var delPublicationById = function(id){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done){
+		client.query('delete from publications where id='+id+';', function(err, result){
+			done();
+			if(err)
+			{
+				deferred.reject(err);
+			}
+			else
+			{
+				deferred.resolve(result);
+			}
+		});
+	})
+	return deferred.promise;
+}
 
