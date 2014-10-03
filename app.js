@@ -116,7 +116,7 @@ app.post('/events/remove', function(req, res){
 	}
 	else res.send('failed');
 });
-app.post('/publications/get', function(req, res){
+app.get('/publications/get', function(req, res){
 	var getallpublications = getPublications();
 	getallpublications.then(function(data){
 		res.send(data.rows);
