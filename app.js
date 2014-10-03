@@ -137,7 +137,7 @@ app.post('/publications/remove', function(req, res){
 	{
 		var delpublications = delPublicationById(req.body.id);
 		delpublications.then(function(data){
-			res.send(success)
+			res.send('success')
 		});
 	}
 	else res.send('failed');
