@@ -74,6 +74,16 @@ app.post('/projects/add', function(req, res){
 	}
 	else res.send('failed');
 });
+app.post('/projects/edit', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var editpro = editProject(req.body.id,req.body.title,req.body.description,req.body.participants);
+		editpro.then(function(data){
+			res.send('success');
+		});
+	}
+	else res.send('failed');
+});
 app.get('/projects/get',function(req, res){
 	var getallprojects = getProjects();
 	getallprojects.then(function(data){
@@ -95,6 +105,16 @@ app.post('/events/add', function(req, res){
 	{
 		var addevent = addEvent(req.body.title,req.body.date,req.body.place,req.body.description,req.body.remarks);
 		addevent.then(function(data){
+			res.send('success');
+		});
+	}
+	else res.send('failed')
+});
+app.post('/events/edit', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var editevent = editEvent(req.body.id,req.body.title,req.body.date,req.body.place,req.body.description,req.body.remarks);
+		editevent.then(function(data){
 			res.send('success');
 		});
 	}
@@ -126,6 +146,16 @@ app.post('/publications/add', function(req, res){
 	if(global.accessToken == req.body.accessToken)
 	{
 		var addpublication = addPublication(req.body.author,req.body.coauthors,req.body.area, req.body.date, req.body.description);
+		addpublication.then(function(data){
+			res.send('success')
+		});
+	}
+	else res.send('failed');
+});
+app.post('/publications/edit', function(req, res){
+	if(global.accessToken == req.body.accessToken)
+	{
+		var editpublication = editPublication(req.body.id,req.body.author,req.body.coauthors,req.body.area, req.body.date, req.body.description);
 		addpublication.then(function(data){
 			res.send('success')
 		});
@@ -190,6 +220,24 @@ var addProject = function(title,desc,part){
        		}
     	});
   		});
+	});
+	return deferred.promise;
+}
+// Edit project
+var editProject = function(id,title,desc,part){
+	var deferred = q.defer();
+	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query("update projects set title='"+title+"',description='"+description+"',participants='"+part+"' where id="+id+";", function(err, result) {
+      done();
+      	if (err)
+       	{
+       	 	deferred.reject(err);
+       	}
+      	else
+       	{
+       	 	deferred.resolve('success');
+       	}
+       	});
 	});
 	return deferred.promise;
 }
@@ -286,6 +334,24 @@ var addEvent = function(title,date,place,description,remarks){
 	});
 	return deferred.promise;
 }
+// edit events
+var editEvent = function(id,title,date,place,description,remarks){
+	var deferred = q.defer();
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query("update events set title='"+title+"',date='"+date+"',place='"+place+"',description='"+description+"',remarks='"+remarks+"');", function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve('success');
+       		}
+    	});
+  		});
+	return deferred.promise;
+}
 // get all the events
 var getEvents = function(){
 	var deferred = q.defer();
@@ -357,6 +423,24 @@ var addPublication = function(author,coauthors,area,date,description){
        		 	deferred.resolve('success');
        		}
     	});
+  		});
+	});
+	return deferred.promise;
+}
+// edit Publications
+var editPublication = function(id,author,coauthors,area,date,description){
+	var deferred = q.defer();
+		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    	client.query("update publications set author='"+author+"'coauthors=,'"+coauthors+"',area='"+area+"',date='"+date+"',description='"+description+"');", function(err, result) {
+      		done();
+      		if (err)
+       		{
+       		 	deferred.reject(err);
+       		}
+      		else
+       		{
+       		 	deferred.resolve('success');
+       		}
   		});
 	});
 	return deferred.promise;
