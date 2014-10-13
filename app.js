@@ -431,7 +431,7 @@ var addPublication = function(author,coauthors,area,date,description){
 var editPublication = function(id,author,coauthors,area,date,description){
 	var deferred = q.defer();
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    	client.query("update publications set author='"+author+"',coauthors=,'"+coauthors+"',area='"+area+"',date='"+date+"',description='"+description+"' where id="+id+";", function(err, result) {
+    	client.query("update publications set author='"+author+"',coauthors='"+coauthors+"',area='"+area+"',date='"+date+"',description='"+description+"' where id="+id+";", function(err, result) {
       		done();
       		if (err)
        		{

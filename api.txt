@@ -48,7 +48,6 @@ to add a new event:
 https://kanoe-api-server.herokuapp.com/publications/add
 payload:
 accessToken: 'accesstoken'
-title: 'title'
 date: 'date'
 author: 'author'
 coauthors: 'coauthors'
