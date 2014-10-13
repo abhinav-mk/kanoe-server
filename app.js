@@ -156,7 +156,7 @@ app.post('/publications/edit', function(req, res){
 	if(global.accessToken == req.body.accessToken)
 	{
 		var editpublication = editPublication(req.body.id,req.body.author,req.body.coauthors,req.body.area, req.body.date, req.body.description);
-		addpublication.then(function(data){
+		editpublication.then(function(data){
 			res.send('success')
 		});
 	}

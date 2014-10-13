@@ -50,11 +50,9 @@ payload:
 accessToken: 'accesstoken'
 title: 'title'
 date: 'date'
-place: 'place'
 author: 'author'
 coauthors: 'coauthors'
 area: 'area'
-date: 'date'
 description: 'description'
 
 to get publications:
