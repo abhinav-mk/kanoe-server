@@ -227,7 +227,7 @@ var addProject = function(title,desc,part){
 var editProject = function(id,title,desc,part){
 	var deferred = q.defer();
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    client.query("update projects set title='"+title+"',description='"+description+"',participants='"+part+"' where id="+id+";", function(err, result) {
+    client.query("update projects set title='"+title+"',description='"+desc+"',participants='"+part+"' where id="+id+";", function(err, result) {
       done();
       	if (err)
        	{
