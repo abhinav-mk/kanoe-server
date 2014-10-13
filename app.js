@@ -338,7 +338,7 @@ var addEvent = function(title,date,place,description,remarks){
 var editEvent = function(id,title,date,place,description,remarks){
 	var deferred = q.defer();
 		pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    	client.query("update events set title='"+title+"',date='"+date+"',place='"+place+"',description='"+description+"',remarks='"+remarks+"');", function(err, result) {
+    	client.query("update events set title='"+title+"',date='"+date+"',place='"+place+"',description='"+description+"',remarks='"+remarks+"' where id="id");", function(err, result) {
       		done();
       		if (err)
        		{
