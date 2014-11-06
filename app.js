@@ -17,7 +17,7 @@ var express = require('express'),
   path = require('path'),
   formidable = require('formidable'),
     util = require('util')
-    fs   = require('fs-extra'),
+    fs   = require('fs-extra');
    // qt   = require('quickthumb');
 
 
