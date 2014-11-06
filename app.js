@@ -195,7 +195,7 @@ app.post('/people/add', function (req, res){
         if(global.accessToken == accesstoken)
         {
         var addpeople = addPeople(id,name,phno,email);
-        adddpeople.then(function(d){
+        addpeople.then(function(d){
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
