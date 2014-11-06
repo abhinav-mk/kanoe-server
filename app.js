@@ -18,7 +18,7 @@ var express = require('express'),
   formidable = require('formidable'),
     util = require('util')
     fs   = require('fs-extra');
-   // qt   = require('quickthumb');
+    qt   = require('quickthumb');
 
 
 
@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({
  */
 
 // all environments
-//app.use(qt.static(__dirname + '/'));
+app.use(qt.static(__dirname + '/'));
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -181,8 +181,9 @@ app.post('/publications/remove', function(req, res){
 });
 app.post('/people/add', function (req, res){
     var getid = getPeopleId();
-    var accesstoken,name,phno,email;
+    var accesstoken,name,phno,email,id;
     getid.then(function(data){
+      id = data.rows[0].id+1;
       var form = new formidable.IncomingForm();
       form.parse(req, function(err, fields, files) {
         accesstoken = fields.accessToken;
@@ -193,7 +194,7 @@ app.post('/people/add', function (req, res){
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
         {
-        var addpeople = addPeople(data.rows[0].id+1,name,phno,email);
+        var addpeople = addPeople(id,name,phno,email);
         adddpeople.then(function(d){
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
