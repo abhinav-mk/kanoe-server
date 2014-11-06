@@ -199,7 +199,7 @@ app.post('/people/add', function (req, res){
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
-        var img_name = (data.rows[0].id+1)+"."+ext[1];
+        var img_name = id+"."+ext[1];
         var new_location = 'people/';
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
