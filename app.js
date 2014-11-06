@@ -172,6 +172,37 @@ app.post('/publications/remove', function(req, res){
 	}
 	else res.send('failed');
 });
+app.post('/people/add', function (req, res){
+  if(global.accessToken == req.body.accessToken)
+  {
+    var getid = getPeopleId();
+    getid.then(function(data){
+      var form = new formidable.IncomingForm();
+      form.parse(req, function(err, fields, files) {
+        var name = fields.name;
+        var phoneno = fields.phno;
+        var email = fields.email;
+        addPeople(data.rows[0].id+1,name,phoneno,email);
+      });
+      form.on('end', function(fields, files) {
+        var temp_path = this.openedFiles[0].path;
+        var file_name = this.openedFiles[0].name;
+        var ext = file_name.split(".");
+        var img_name = data.rows[0].id+"."+ext[1];
+        var new_location = 'people/';
+        fs.copy(temp_path, new_location + img_name, function(err) {  
+          if (err) {
+            console.error(err);
+          } else {
+            console.log("success!")
+          }
+        });
+      });
+    }); 
+  }
+  else res.send('failed');
+});
+});
 /**
  * Start Server
  */
@@ -481,4 +512,34 @@ var delPublicationById = function(id){
 	})
 	return deferred.promise;
 }
-
+var getPeopleId = function(){
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('select id from people order by id desc limit 1', function(err, result) {
+          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
+var addPeople = function(id,name,phno,email){
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query("insert into people values("+id+",'"+name+"','"+phno+"','"+email+"');", function(err, result) {
+          done();
+          if (err)
+          {
+            console.log(err);
+          }
+          else
+          {
+          }
+      });
+    });
+}
