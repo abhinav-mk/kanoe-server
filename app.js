@@ -211,7 +211,7 @@ app.post('/people/add', function (req, res){
         });
       });
       }
-      else res.send('failed');
+      else res.send({"at":accesstoken,"global":global.accessToken});
     });   
 });
 /**
