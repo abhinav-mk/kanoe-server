@@ -181,14 +181,20 @@ app.post('/publications/remove', function(req, res){
 });
 app.post('/people/add', function (req, res){
     var getid = getPeopleId();
+    var accesstoken,name,phno,email;
     getid.then(function(data){
       var form = new formidable.IncomingForm();
       form.parse(req, function(err, fields, files) {
+        accesstoken = fields.accessToken;
+        name = fields.name;
+        phno = fields.phno;
+        email = fields.email;
       });
       form.on('end', function(fields, files) {
-        if(global.accessToken == parseInt(fields.accessToken))
+        if(global.accessToken == accesstoken)
         {
-        addPeople(data.rows[0].id+1,fields.name,fields.fields.phno,fields.email);
+        var addpeople = addPeople(data.rows[0].id+1,name,phno,email);
+        adddpeople.then(function(d){
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
@@ -200,6 +206,8 @@ app.post('/people/add', function (req, res){
           } else {
             console.log("success!")
           }
+        });
+        res.send("success")
         });
         }
         else res.send({"at":accesstoken,"global":global.accessToken});
@@ -533,16 +541,19 @@ var getPeopleId = function(){
     return deferred.promise;
 }
 var addPeople = function(id,name,phno,email){
+  var deferred = q.defer();
     pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       client.query("insert into people values("+id+",'"+name+"','"+phno+"','"+email+"');", function(err, result) {
           done();
           if (err)
           {
-            console.log(err);
+            deferred.reject(err);
           }
           else
           {
+            deferred.resolve("");
           }
       });
     });
+    return deferred.promise;
 }
