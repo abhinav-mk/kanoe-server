@@ -190,8 +190,10 @@ app.post('/people/add', function (req, res){
         phoneno = fields.phno;
         email = fields.email;
         accesstoken = fields.accessToken;
+        console.log("accesstoken",accesstoken)
+        console.log("global token",global.accessToken)
       });
-      if(global.accessToken == accesstoken)
+      if(global.accessToken == parseInt(accesstoken))
       {
       addPeople(data.rows[0].id+1,name,phoneno,email);
       form.on('end', function(fields, files) {
