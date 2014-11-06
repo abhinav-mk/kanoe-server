@@ -202,7 +202,6 @@ app.post('/people/add', function (req, res){
   }
   else res.send('failed');
 });
-});
 /**
  * Start Server
  */
