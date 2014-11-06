@@ -180,23 +180,15 @@ app.post('/publications/remove', function(req, res){
 	else res.send('failed');
 });
 app.post('/people/add', function (req, res){
-    var accesstoken;
-    var name,phoneno,email;
     var getid = getPeopleId();
     getid.then(function(data){
       var form = new formidable.IncomingForm();
       form.parse(req, function(err, fields, files) {
-        name = fields.name;
-        phoneno = fields.phno;
-        email = fields.email;
-        accesstoken = fields.accessToken;
-        console.log("accesstoken",accesstoken)
-        console.log("global token",global.accessToken)
       });
-      if(global.accessToken == parseInt(accesstoken))
-      {
-      addPeople(data.rows[0].id+1,name,phoneno,email);
       form.on('end', function(fields, files) {
+        if(global.accessToken == parseInt(fields.accessToken))
+        {
+        addPeople(data.rows[0].id+1,fields.name,fields.fields.phno,fields.email);
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
@@ -209,9 +201,9 @@ app.post('/people/add', function (req, res){
             console.log("success!")
           }
         });
+        }
+        else res.send({"at":accesstoken,"global":global.accessToken});
       });
-      }
-      else res.send({"at":accesstoken,"global":global.accessToken});
     });   
 });
 /**
