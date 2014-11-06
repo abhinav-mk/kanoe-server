@@ -184,14 +184,13 @@ app.post('/people/add', function (req, res){
     var accesstoken,name,phno,email,id;
     getid.then(function(data){
       id = data.rows[0].id+1;
-      console.log("id is",id)
       var form = new formidable.IncomingForm();
       form.parse(req, function(err, fields, files) {
         accesstoken = fields.accessToken;
         name = fields.name;
         phno = fields.phno;
         email = fields.email;
-        console.log("at is",accesstoken)
+        res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
@@ -203,7 +202,6 @@ app.post('/people/add', function (req, res){
         var ext = file_name.split(".");
         var img_name = id+"."+ext[1];
         var new_location = 'people/';
-        console.log("location is",new_location+img_name)
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
             console.error(err);
