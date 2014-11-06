@@ -20,6 +20,8 @@ var express = require('express'),
     fs   = require('fs-extra'),
     qt   = require('quickthumb');
 
+
+
 var app = module.exports = express();
 app.use(bodyParser.urlencoded({
   extended: true
@@ -30,6 +32,7 @@ app.use(bodyParser.urlencoded({
  */
 
 // all environments
+app.use(qt.static(__dirname + '/'));
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
