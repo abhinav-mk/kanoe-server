@@ -230,14 +230,14 @@ app.post('/people/add', function (req, res){
 });
 app.get('/people/get', function(req, res){
   var getpeople = getPeople();
-  var getpeopleimage = getPeopleImage();
+  var getpeopleimage = getPeopleImageId();
   var people_data;
   var people_image_data;
   getpeople.then(function(data1){
     people_data = data1.rows;
     getpeopleimage.then(function(data2){
       people_image_data = data2.rows;
-      res.send({"people_data":people_data,"people_image_data":people_image_data})
+      res.send({"people_data":people_data,"people_image_id":people_image_data})
     });
   });
 });
@@ -624,10 +624,10 @@ var getPeople = function(){
     return deferred.promise;
 }
 
-var getPeopleImage = function(){
+var getPeopleImageId = function(){
   var deferred = q.defer();
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('SELECT * FROM people_images', function(err, result) {
+      client.query('SELECT id FROM people_images', function(err, result) {
           done();
           if (err)
           { 
