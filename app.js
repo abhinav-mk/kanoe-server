@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({
  */
 
 // all environments
-app.use(qt.static(__dirname + '/'));
+//app.use(qt.static(__dirname + '/'));
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -202,19 +202,27 @@ app.post('/people/add', function (req, res){
         {
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
+          ///////////////////////////////
         //var temp_path = this.openedFiles[0].path;
         //var file_name = this.openedFiles[0].name;
         //res.end({"temp_path":temp_path,"file_name":file_name});
-        var ext = file_name.split(".");
-        img_name = id+"."+ext[1];
-        var new_location = 'people/';
-        fs.copy(temp_path, new_location + img_name, function(err) {  
-          if (err) {
-            console.error(err);
-          } else {
-            res.send("success");
-          }
+        // var ext = file_name.split(".");
+        // img_name = id+"."+ext[1];
+        // var new_location = 'people/';
+        // fs.copy(temp_path, new_location + img_name, function(err) {  
+        //   if (err) {
+        //     console.error(err);
+        //   } else {
+        //     res.send("success");
+        //   }
+        // });
+        fs.readFile(temp_path, 'hex', function(err, imgData) {
+          imgData = '\\x' + imgData;
+          app.pgClient.query('insert into people_images values ('+id+',$1)',[imgData],
+                                        function(err, writeResult) {
+          });
         });
+        ///////////////////////////////////
         });
         }
         else res.send({"at":accesstoken,"global":global.accessToken});
