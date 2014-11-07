@@ -197,19 +197,20 @@ app.post('/people/add', function (req, res){
         {
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
+          res.end("entered");
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
         var img_name = id+"."+ext[1];
         var new_location = 'people/';
+        res.end("path is:"+temp_path, new_location + img_name);
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
             console.error(err);
           } else {
-            console.log("success!")
+            res.send("success")
           }
         });
-        res.send("success")
         });
         }
         else res.send({"at":accesstoken,"global":global.accessToken});
