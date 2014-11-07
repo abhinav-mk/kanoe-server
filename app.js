@@ -246,16 +246,8 @@ app.get('/people/image/get/:name',function(req, res){
   var temp_name = '/tmp/'+id+'.png'
   var getimage = getPeopleImage(id);
   getimage.then(function(data){
-    var i;
-    for(i=0;i<data.rows.length;i++)
-    {
-      if(data.rows[i].id == id)
-      {
-        break;
-      }
-    }
-    console.log("data:",data.rows[i])
-    fs.writeFile(temp_name, data.rows[i].image);
+    console.log("data:",data)
+    fs.writeFile(temp_name, data.rows[0]);
     res.send(fs.createWriteStream(temp_name))
   });
 });
@@ -662,7 +654,7 @@ var getPeopleImageId = function(){
 var getPeopleImage = function(id){
   var deferred = q.defer();
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('SELECT * FROM people_images', function(err, result) {
+      client.query('SELECT image FROM people_images where id ='+id+'', function(err, result) {
           done();
           if (err)
           { 
