@@ -230,16 +230,17 @@ app.post('/people/add', function (req, res){
 });
 app.get('/people/get', function(req, res){
   var getpeople = getPeople();
-  var getpeopleimage = getPeopleImage();
+  //var getpeopleimage = getPeopleImage();
   var people_data;
-  var people_image_data;
+  //var people_image_data;
   getpeople.then(function(data){
     people_data = data.rows;
   });
-  getpeopleimage.then(function(data){
-    people_image_data = data.rows;
-  });
-  res.send({"people_data":people_data,"people_image_data":people_image_data})
+  //getpeopleimage.then(function(data){
+  //  people_image_data = data.rows;
+  //});
+  //res.send({"people_data":people_data,"people_image_data":people_image_data})
+    res.send({"people":people_data})
 });
 /**
  * Start Server
