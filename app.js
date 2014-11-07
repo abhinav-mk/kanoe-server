@@ -216,11 +216,9 @@ app.post('/people/add', function (req, res){
         //     res.send("success");
         //   }
         // });
-        fs.readFile(temp_path, 'hex', function(err, imgData) {
-          imgData = '\\x' + imgData;
-          app.pgClient.query('insert into people_images values ('+id+',$1)',[imgData],
-                                        function(err, writeResult) {
-          });
+        var addpeopleimage = addPeopleImage(id,temp_path);
+        addpeopleimage.then(function(d1){
+          res.send("success");
         });
         ///////////////////////////////////
         });
@@ -571,4 +569,25 @@ var addPeople = function(id,name,phno,email){
       });
     });
     return deferred.promise;
+}
+var addPeopleImage = function(id,temp_path){
+  var deferred = q.defer();
+  fs.readFile(temp_path, 'hex', function(err, imgData) {
+          imgData = '\\x' + imgData;
+          pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+          client.query('insert into people_images values ('+id+',$1)',[imgData],
+                                        function(err, result) {
+                                          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+          });
+        });
+  });
+  return deferred.promise;
 }
