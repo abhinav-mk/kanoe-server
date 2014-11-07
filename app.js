@@ -190,7 +190,7 @@ app.post('/people/add', function (req, res){
         name = fields.name;
         phno = fields.phno;
         email = fields.email;
-        res.send(util.inspect({fields: fields, files: files}));
+        //res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
@@ -209,7 +209,7 @@ app.post('/people/add', function (req, res){
             console.log("success!")
           }
         });
-        //res.send("success")
+        res.send("success")
         });
         }
         else res.send({"at":accesstoken,"global":global.accessToken});
