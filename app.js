@@ -19,8 +19,7 @@ var express = require('express'),
   formidable = require('formidable'),
     util = require('util'),
     fs   = require('fs-extra'),
-    qt   = require('quickthumb'),
-    request = require('request');
+    qt   = require('quickthumb');
 
 
 
@@ -231,38 +230,17 @@ app.post('/people/add', function (req, res){
 });
 app.get('/people/get', function(req, res){
   var getpeople = getPeople();
-  var getpeopleimage = getPeopleImageId();
+  var getpeopleimage = getPeopleImage();
   var people_data;
   var people_image_data;
   getpeople.then(function(data1){
     people_data = data1.rows;
     getpeopleimage.then(function(data2){
       people_image_data = data2.rows;
-      res.send({"people_data":people_data,"people_image_id":people_image_data})
+      res.send({"people_data":people_data,"people_image_data":people_image_data})
     });
   });
 });
-app.get('/people/image/get/:name',function(req, res){
-  var id = req.params.name.split('.')[0]
-  var temp_name = '/tmp/'+id+'.png'
-  var getimage = getPeopleImage(id);
-  getimage.then(function(data){
-    console.log("data:",data)
-    fs.writeFile(temp_name, data.rows[0]);
-    //res.send(fs.createWriteStream(temp_name))
-    download('https://kanoe-api-server.herokuapp.com/people/image/get/'+id+'.png', temp_name, function(){
-    console.log('Done downloading..');
-  });
-  });
-});
-var download = function(uri, filename, callback){
-  request.head(uri, function(err, res, body){
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-    var r = request(uri).pipe(fs.createWriteStream(filename));
-    r.on('close', callback);
-  });
-};
 /**
  * Start Server
  */
@@ -397,7 +375,7 @@ var getEventId = function(){
        		 	deferred.reject(err);
        		}
       		else
-       		{request = require('request');
+       		{
        		 	deferred.resolve(result);
        		}
     	});
@@ -646,10 +624,10 @@ var getPeople = function(){
     return deferred.promise;
 }
 
-var getPeopleImageId = function(){
+var getPeopleImage = function(){
   var deferred = q.defer();
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('SELECT id FROM people_images', function(err, result) {
+      client.query('SELECT * FROM people_images', function(err, result) {
           done();
           if (err)
           { 
@@ -663,21 +641,5 @@ var getPeopleImageId = function(){
     });
     return deferred.promise;
 }
-var getPeopleImage = function(id){
-  var deferred = q.defer();
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('SELECT image FROM people_images where id ='+id+'', function(err, result) {
-          done();
-          if (err)
-          { 
-            deferred.reject(err);
-          }
-          else
-          {
-            deferred.resolve(result);
-          }
-      });
-    });
-    return deferred.promise;
-}
+
 
