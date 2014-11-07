@@ -241,6 +241,16 @@ app.get('/people/get', function(req, res){
     });
   });
 });
+app.get('/people/image/get/:name',function(req, res){
+  var id = req.params.name.split('.')[0]
+  var temp_name = '/tmp/'+id+'.png'
+  var getimage = getPeopleImage(id);
+  getimage.then(function(data){
+    console.log("data:",data)
+    fs.writeFile(temp_name, data.rows[0]);
+    res.send(fs.createWriteStream(temp_name))
+  });
+});
 /**
  * Start Server
  */
@@ -641,5 +651,21 @@ var getPeopleImageId = function(){
     });
     return deferred.promise;
 }
-
+var getPeopleImage = function(id){
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('SELECT image FROM people_images where id ='+id+'', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
 
