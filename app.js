@@ -195,7 +195,7 @@ app.post('/people/add', function (req, res){
         email = fields.email;
         temp_path = files.upload.path;
         file_name = files.upload.name;
-        res.end(util.inspect({fields: fields, files: files}));
+        //res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
@@ -204,10 +204,10 @@ app.post('/people/add', function (req, res){
         addpeople.then(function(d){
         //var temp_path = this.openedFiles[0].path;
         //var file_name = this.openedFiles[0].name;
-        res.end({"temp_path":temp_path,"file_name":file_name});
+        //res.end({"temp_path":temp_path,"file_name":file_name});
         var ext = file_name.split(".");
         img_name = id+"."+ext[1];
-        var new_location = 'people/';
+        var new_location = 'upload/';
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
             console.error(err);
