@@ -190,7 +190,7 @@ app.post('/people/add', function (req, res){
         name = fields.name;
         phno = fields.phno;
         email = fields.email;
-        res.end(util.inspect({fields: fields, files: files}));
+        //res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
