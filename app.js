@@ -1,4 +1,5 @@
 
+
 /**
  * Module dependencies
  */
@@ -226,6 +227,19 @@ app.post('/people/add', function (req, res){
         else res.send({"at":accesstoken,"global":global.accessToken});
       });
     });   
+});
+app.get('/people/get', function(req, res){
+  var getpeople = getPeople();
+  var getpeopleimage = getPeopleImage();
+  var people_data;
+  var people_image_data;
+  getpeople.then(function(data){
+    people_data = data.rows;
+  });
+  getpeopleimage.then(function(data){
+    people_image_data = data.rows;
+  });
+  res.send({"people_data":people_data,"people_image_data":people_image_data})
 });
 /**
  * Start Server
@@ -591,3 +605,41 @@ var addPeopleImage = function(id,temp_path){
   });
   return deferred.promise;
 }
+
+var getPeople = function(){
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('SELECT * FROM people', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
+
+var getPeopleImage = function(){
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('SELECT * FROM people_images', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
+
+
