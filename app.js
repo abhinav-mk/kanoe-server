@@ -654,7 +654,7 @@ var getPeopleImageId = function(){
 var getPeopleImage = function(id){
   var deferred = q.defer();
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-      client.query('SELECT image FROM people_images where id ='+id+'', function(err, result) {
+      client.query('SELECT * FROM people_images where id ='+id+'', function(err, result) {
           done();
           if (err)
           { 
