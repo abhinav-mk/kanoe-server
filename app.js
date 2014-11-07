@@ -208,7 +208,6 @@ app.post('/people/add', function (req, res){
         var ext = file_name.split(".");
         img_name = id+"."+ext[1];
         var new_location = 'people/';
-        res.end("path is:"+new_location+img_name);
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
             console.error(err);
