@@ -232,11 +232,18 @@ app.get('/people/get', function(req, res){
   var getpeople = getPeople();
   var getpeopleimage = getPeopleImage();
   var people_data;
-  var people_image_data;
   getpeople.then(function(data1){
     people_data = data1.rows;
     getpeopleimage.then(function(data2){
-      people_image_data = data2.rows;
+      var i,temp_name;
+      var people_image_data=data2.rows;
+      for(i=0;i<data2.rows.length;i++)
+      {
+        temp_name = "/tmp/"id+".png"
+        fs.writeFile(temp_name,date2.rows[i])
+        people_image_data[i].image = fs.createWriteStream(temp_name)
+      }
+      //people_image_data = data2.rows;
       res.send({"people_data":people_data,"people_image_data":people_image_data})
     });
   });
