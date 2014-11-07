@@ -197,7 +197,6 @@ app.post('/people/add', function (req, res){
         {
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
-          res.end("entered");
         var temp_path = this.openedFiles[0].path;
         var file_name = this.openedFiles[0].name;
         var ext = file_name.split(".");
