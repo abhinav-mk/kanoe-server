@@ -182,6 +182,9 @@ app.post('/publications/remove', function(req, res){
 app.post('/people/add', function (req, res){
     var getid = getPeopleId();
     var accesstoken,name,phno,email,id;
+    var temp_path;
+    var img_name;
+    var file_name;
     getid.then(function(data){
       id = data.rows[0].id+1;
       var form = new formidable.IncomingForm();
@@ -190,6 +193,8 @@ app.post('/people/add', function (req, res){
         name = fields.name;
         phno = fields.phno;
         email = fields.email;
+        temp_path = files.upload.path;
+        file_name = files.upload.name;
         //res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
@@ -197,11 +202,11 @@ app.post('/people/add', function (req, res){
         {
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
-        var temp_path = this.openedFiles[0].path;
-        var file_name = this.openedFiles[0].name;
-        res.end({"temp_path":temp_path,"file_name":file_name});
+        //var temp_path = this.openedFiles[0].path;
+        //var file_name = this.openedFiles[0].name;
+        //res.end({"temp_path":temp_path,"file_name":file_name});
         var ext = file_name.split(".");
-        var img_name = id+"."+ext[1];
+        img_name = id+"."+ext[1];
         var new_location = 'people/';
         res.end("path is:"+new_location+img_name);
         fs.copy(temp_path, new_location + img_name, function(err) {  
