@@ -212,6 +212,7 @@ app.post('/people/add', function (req, res){
           if (err) {
             console.error(err);
           } else {
+            res.send("success");
           }
         });
         });
