@@ -17,9 +17,10 @@ var express = require('express'),
   q = require('q'),
   path = require('path'),
   formidable = require('formidable'),
-    util = require('util')
-    fs   = require('fs-extra');
-    qt   = require('quickthumb');
+    util = require('util'),
+    fs   = require('fs-extra'),
+    qt   = require('quickthumb'),
+    request = require('request');
 
 
 
@@ -247,10 +248,21 @@ app.get('/people/image/get/:name',function(req, res){
   var getimage = getPeopleImage(id);
   getimage.then(function(data){
     console.log("data:",data)
-    fs.writeFile(temp_name, data.rows[0]);
-    res.send(fs.createWriteStream(temp_name))
+    //fs.writeFile(temp_name, data.rows[0]);
+    //res.send(fs.createWriteStream(temp_name))
+    download('https://kanoe-api-server.herokuapp.com/people/image/get/'+id+'.png', temp_name, function(){
+    console.log('Done downloading..');
+  });
   });
 });
+var download = function(uri, filename, callback){
+  request.head(uri, function(err, res, body){
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
+    var r = request(uri).pipe(fs.createWriteStream(filename));
+    r.on('close', callback);
+  });
+};
 /**
  * Start Server
  */
