@@ -248,7 +248,7 @@ app.get('/people/image/get/:name',function(req, res){
   var getimage = getPeopleImage(id);
   getimage.then(function(data){
     console.log("data:",data)
-    //fs.writeFile(temp_name, data.rows[0]);
+    fs.writeFile(temp_name, data.rows[0]);
     //res.send(fs.createWriteStream(temp_name))
     download('https://kanoe-api-server.herokuapp.com/people/image/get/'+id+'.png', temp_name, function(){
     console.log('Done downloading..');
@@ -397,7 +397,7 @@ var getEventId = function(){
        		 	deferred.reject(err);
        		}
       		else
-       		{
+       		{request = require('request');
        		 	deferred.resolve(result);
        		}
     	});
