@@ -207,12 +207,11 @@ app.post('/people/add', function (req, res){
         //res.end({"temp_path":temp_path,"file_name":file_name});
         var ext = file_name.split(".");
         img_name = id+"."+ext[1];
-        var new_location = 'upload/';
+        var new_location = 'people/';
         fs.copy(temp_path, new_location + img_name, function(err) {  
           if (err) {
             console.error(err);
           } else {
-            res.send("success")
           }
         });
         });
