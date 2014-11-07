@@ -239,7 +239,7 @@ app.get('/people/get', function(req, res){
       var people_image_data=data2.rows;
       for(i=0;i<data2.rows.length;i++)
       {
-        temp_name = "/tmp/"id+".png"
+        temp_name = "/tmp/"+id+".png"
         fs.writeFile(temp_name,date2.rows[i])
         people_image_data[i].image = fs.createWriteStream(temp_name)
       }
