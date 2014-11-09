@@ -241,6 +241,14 @@ app.get('/people/get', function(req, res){
     });
   });
 });
+app.get('/people/get/:id', function(req, res){
+	var img_id = req.params.id;
+	var getpeopleimagebyid = getPeopleImageById(img_id);
+	getpeopleimagebyid.then(function(data){
+		res.setHeader('Content-Type','multipart/form-data');
+		res.send(data.rows[0].image)
+	});
+});
 /**
  * Start Server
  */
@@ -641,5 +649,21 @@ var getPeopleImage = function(){
     });
     return deferred.promise;
 }
-
+var getPeopleImageById = function(id){
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('SELECT image FROM people_images where id ='+id+'', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
 
