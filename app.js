@@ -196,32 +196,16 @@ app.post('/people/add', function (req, res){
         email = fields.email;
         temp_path = files.upload.path;
         file_name = files.upload.name;
-        //res.end(util.inspect({fields: fields, files: files}));
       });
       form.on('end', function(fields, files) {
         if(global.accessToken == accesstoken)
         {
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
-          ///////////////////////////////
-        //var temp_path = this.openedFiles[0].path;
-        //var file_name = this.openedFiles[0].name;
-        //res.end({"temp_path":temp_path,"file_name":file_name});
-        // var ext = file_name.split(".");
-        // img_name = id+"."+ext[1];
-        // var new_location = 'people/';
-        // fs.copy(temp_path, new_location + img_name, function(err) {  
-        //   if (err) {
-        //     console.error(err);
-        //   } else {
-        //     res.send("success");
-        //   }
-        // });
-        var addpeopleimage = addPeopleImage(id,temp_path);
-        addpeopleimage.then(function(d1){
-          res.send("success");
-        });
-        ///////////////////////////////////
+	        var addpeopleimage = addPeopleImage(id,temp_path);
+	        addpeopleimage.then(function(d1){
+	          res.send("success");
+        	});
         });
         }
         else res.send({"at":accesstoken,"global":global.accessToken});
@@ -245,7 +229,7 @@ app.get('/people/get/:id', function(req, res){
 	var img_id = req.params.id;
 	var getpeopleimagebyid = getPeopleImageById(img_id);
 	getpeopleimagebyid.then(function(data){
-		res.setHeader('Content-Type','multipart/form-data');
+		res.setHeader('Content-Type','image/jpeg');
 		res.send(data.rows[0].image)
 	});
 });
