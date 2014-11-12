@@ -212,6 +212,20 @@ app.post('/people/add', function (req, res){
       });
     });   
 });
+app.post('/people/remove', function(req, res){
+  if(global.accessToken == req.body.accessToken)
+  {
+    var id = req.body.id;
+    var deletepeople = deletePeople(id);
+    deletepeople.then(function(data){
+      var deletepeopleimage = deletePeopleImage(id);
+      deletepeopleimage.then(function(data){
+        res.send('success');
+      })
+    });
+  }
+  else res.send('failed');
+})
 app.get('/people/get', function(req, res){
   var getpeople = getPeople();
   var getpeopleimage = getPeopleImage();
@@ -650,4 +664,39 @@ var getPeopleImageById = function(id){
     });
     return deferred.promise;
 }
-
+var deletePeople = function(id)
+{
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('delete from people where id='+id+'', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
+var deletePeopleImage = function(id)
+{
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query('delete from people_images where id='+id+'', function(err, result) {
+          done();
+          if (err)
+          { 
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
