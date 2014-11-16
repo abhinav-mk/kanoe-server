@@ -198,8 +198,8 @@ app.post('/people/add', function (req, res){
         file_name = files.upload.name;
       });
       form.on('end', function(fields, files) {
-        if(global.accessToken == accesstoken)
-        {
+        //if(global.accessToken == accesstoken)
+        //{
         var addpeople = addPeople(id,name,phno,email);
         addpeople.then(function(d){
 	        var addpeopleimage = addPeopleImage(id,temp_path);
@@ -207,8 +207,8 @@ app.post('/people/add', function (req, res){
 	          res.send("success");
         	});
         });
-        }
-        else res.send('failed');
+        //}
+        //else res.send('failed');
       });
     });   
 });
