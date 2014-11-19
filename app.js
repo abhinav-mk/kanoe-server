@@ -214,14 +214,14 @@ app.post('/people/add', function (req, res){
 });
 app.post('/people/edit', function (req, res){
     //var getid = getPeopleId();
-    var accesstoken,name,phno,email,id;
+    var name,phno,email,id;
     var temp_path;
     var img_name;
     var file_name;
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
     	id = fields.id;
-      accesstoken = fields.accessToken;
+      //accesstoken = fields.accessToken;
       name = fields.name;
       phno = fields.phno;
       email = fields.email;
@@ -232,9 +232,9 @@ app.post('/people/edit', function (req, res){
         //if(global.accessToken == accesstoken)
         //{
         var editpeople = editPeople(id,name,phno,email);
-        addpeople.then(function(d){
+        editpeople.then(function(d){
 	        var editpeopleimage = editPeopleImage(id,temp_path);
-	        addpeopleimage.then(function(d1){
+	        editpeopleimage.then(function(d1){
 	          res.send("success");
         	});
         });
