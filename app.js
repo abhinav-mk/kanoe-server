@@ -212,6 +212,36 @@ app.post('/people/add', function (req, res){
       });
     });   
 });
+app.post('/people/edit', function (req, res){
+    //var getid = getPeopleId();
+    var accesstoken,name,phno,email,id;
+    var temp_path;
+    var img_name;
+    var file_name;
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+    	id = fields.id;
+      accesstoken = fields.accessToken;
+      name = fields.name;
+      phno = fields.phno;
+      email = fields.email;
+      temp_path = files.upload.path;
+      file_name = files.upload.name;
+      });
+      form.on('end', function(fields, files) {
+        //if(global.accessToken == accesstoken)
+        //{
+        var editpeople = editPeople(id,name,phno,email);
+        addpeople.then(function(d){
+	        var editpeopleimage = editPeopleImage(id,temp_path);
+	        addpeopleimage.then(function(d1){
+	          res.send("success");
+        	});
+        });
+        //}
+        //else res.send('failed');
+      }); 
+});
 app.post('/people/remove', function(req, res){
   if(global.accessToken == req.body.accessToken)
   {
@@ -699,4 +729,42 @@ var deletePeopleImage = function(id)
       });
     });
     return deferred.promise;
+}
+var editPeople = function(id,name,phno,email){
+  var deferred = q.defer();
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+      client.query("update people set name='"+name+"',phno='"+phno+"',email='"+email+"'where id="+id+";", function(err, result) {
+          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+      });
+    });
+    return deferred.promise;
+}
+var editPeopleImage = function(id,temp_path){
+  var deferred = q.defer();
+  fs.readFile(temp_path, 'hex', function(err, imgData) {
+          imgData = '\\x' + imgData;
+          pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+          client.query('update people_images set image=$1 where id='+id+';',[imgData],
+                                        function(err, result) {
+                                          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve(result);
+          }
+          });
+        });
+  });
+  return deferred.promise;
 }
