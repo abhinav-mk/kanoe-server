@@ -342,6 +342,24 @@ var addContents = function(contents)
   });
   return deferred.promise;
 }
+var getContents = function()
+{
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query("select * from contents", function(err, result) {
+          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve('success');
+          }
+      });
+  });
+  return deferred.promise;
+}
 // add a new project
 var addProject = function(title,desc,part){
 	var deferred = q.defer();
