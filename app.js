@@ -277,6 +277,23 @@ app.get('/people/get/:id', function(req, res){
 		res.send(data.rows[0].image)
 	});
 });
+app.post('/home/contents', function(req, res){
+  if(global.accessToken == req.body.accessToken)
+  {
+    var contents = req.body.contents;
+    var addcontents = addContents(contents);
+    addcontents.then(function(data){
+      res.send('success');
+    });
+  }
+  else res.send('failed')
+});
+app.get('/home/getcontents', function(req, res){
+  var getcontents = getContents();
+  getcontents.then(function(data){
+    res.send(data.rows);
+  })
+});
 /**
  * Start Server
  */
@@ -307,6 +324,24 @@ var auth_credentials = function(){
   	});
   	return deferred.promise;
 }	
+var addContents = function(contents)
+{
+  var deferred = q.defer();
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query("update contents set contents='"+contents+"';", function(err, result) {
+          done();
+          if (err)
+          {
+            deferred.reject(err);
+          }
+          else
+          {
+            deferred.resolve('success');
+          }
+      });
+  });
+  return deferred.promise;
+}
 // add a new project
 var addProject = function(title,desc,part){
 	var deferred = q.defer();
