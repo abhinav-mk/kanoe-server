@@ -607,7 +607,7 @@ var editPublication = function(id,author,coauthors,area,date,description){
 var getPublications = function(){
 	var deferred = q.defer();
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    	client.query('SELECT * FROM publications group by area', function(err, result) {
+    	client.query('SELECT * FROM publications order by area', function(err, result) {
       		done();
       		if (err)
       		{	
