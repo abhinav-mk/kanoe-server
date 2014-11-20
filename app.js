@@ -291,7 +291,7 @@ app.post('/home/contents', function(req, res){
 app.get('/home/getcontents', function(req, res){
   var getcontents = getContents();
   getcontents.then(function(data){
-    res.send(data.rows);
+    res.send(data);
   })
 });
 /**
