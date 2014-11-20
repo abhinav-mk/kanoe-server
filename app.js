@@ -291,7 +291,7 @@ app.post('/home/contents', function(req, res){
 app.get('/home/getcontents', function(req, res){
   var getcontents = getContents();
   getcontents.then(function(data){
-    res.send(data);
+    res.send(data.rows);
   })
 });
 /**
@@ -354,7 +354,7 @@ var getContents = function()
           }
           else
           {
-            deferred.resolve('success');
+            deferred.resolve(result);
           }
       });
   });
@@ -607,7 +607,7 @@ var editPublication = function(id,author,coauthors,area,date,description){
 var getPublications = function(){
 	var deferred = q.defer();
 	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    	client.query('SELECT * FROM publications', function(err, result) {
+    	client.query('SELECT * FROM publications group by area', function(err, result) {
       		done();
       		if (err)
       		{	
